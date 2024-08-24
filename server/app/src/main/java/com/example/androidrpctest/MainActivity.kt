@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
                         Log.e("","86")
 
                         // convert bitmap to RGBA_888
-//                        img = img.copy(Bitmap.Config.ARGB_8888, false)
+                        img = img.copy(Bitmap.Config.ARGB_8888, false)
                         Log.e("","87")
 
 
@@ -113,19 +113,22 @@ class MainActivity : ComponentActivity() {
                         data class Msg(
                             val width: Int,
                             val height: Int,
-                            val data: String
+                            val data: UByteArray
                         )
-                        Log.e("", "screenshot convert start")
+                        Log.e("", "screenshot convert start: png + byte")
                         // base64 encode buf
-                        var stream = ByteArrayOutputStream()
+                        var stream = ByteArrayOutputStream(img.byteCount)
                         img.compress(Bitmap.CompressFormat.PNG, 100, stream)
+
+                        Log.e("", "screenshot png encode finish")
+
 //                        val s = java.util.Base64.getEncoder().encodeToString(stream.toByteArray())
-                        val s = kotlin.io.encoding.Base64.encode(stream.toByteArray())
+//                        val s = kotlin.io.encoding.Base64.encode(stream.toByteArray())
 //                        val s = android.util.Base64.encodeToString(stream.toByteArray(), android.util.Base64.DEFAULT)
 
 
                         val d1 = Msg(
-                            data = s,
+                            data = stream.toByteArray().asUByteArray(),
                             width = 1920,
                             height = 1080
                         )
