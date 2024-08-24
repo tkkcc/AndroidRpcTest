@@ -51,29 +51,32 @@ impl World for HelloServer {
 
             error!("47");
             let data = data.resize_exact(2880, 1620, image::imageops::FilterType::Triangle);
-            data
+            data.into_rgba8().into()
         });
         let data = &DATA;
 
-        error!("48");
-        let mut buf = Vec::new();
-        error!("49");
-        let encoder = PngEncoder::new(&mut buf);
-        error!("50 {}x{}", data.width(), data.height());
-        let e = encoder.write_image(
-            &data.to_rgb8(),
-            data.width(),
-            data.height(),
-            data.color().into(), // image::ExtendedColorType::Rgba8,
-        );
-        error!("51 {:?}", e);
+        // error!("48");
+        // let mut buf = Vec::new();
+        // error!("49");
+        // let encoder = PngEncoder::new(&mut buf);
+        // error!("50 {}x{}", data.width(), data.height());
+        // let e = encoder.write_image(
+        //     data.as_bytes(),
+        //     data.width(),
+        //     data.height(),
+        //     data.color().into(),
+        // );
+        // error!("51 {:?}", e);
+
+        let buf = data.as_bytes();
+
         error!("end  data allocation");
         // let Ok(buf) = buf else {
         //     error!("{:?}", buf);
         //     panic!();
         // };
         error!("success");
-        Msg { data: buf }
+        Msg { data: buf.into() }
     }
 }
 

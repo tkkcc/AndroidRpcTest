@@ -50,8 +50,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     let start_time = Instant::now();
                     println!("start");
                     let res = c.start(Context::current()).await?;
-                    let img = image::load_from_memory(&res.data)?;
-                    println!("response reseive, size {}", img.width());
+                    // let img = image::load_from_memory(&res.data)?;
+                    // println!("response reseive, size {}", img.width());
                     println!("time {:?}", start_time.elapsed());
                 }
                 Ok::<(), anyhow::Error>(())
