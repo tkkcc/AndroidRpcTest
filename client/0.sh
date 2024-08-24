@@ -2,12 +2,14 @@
 
 run() {
   set -e
-  cargo ndk -t x86 build --release
-  adb push target/i686-linux-android/release/client /data/local/tmp/
+  # cargo ndk -t x86 build --release
+  # adb push target/i686-linux-android/release/client /data/local/tmp/
+  cargo ndk -t x86_64 build --release
+  adb push target/x86_64-linux-android/release/client /data/local/tmp/
   adb shell /data/local/tmp/client
 }
 dev() {
-  cargo watch -w src -s -- ./0.sh run
+  cargo watch -w src -s './0.sh run'
 }
 
 "$@"
