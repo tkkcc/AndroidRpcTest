@@ -23,8 +23,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("start decode image");
     let img = BASE64_STANDARD.decode(msg.data)?;
     dbg!(21);
-    let img = image::load_from_memory(&img)?;
-    println!("img shape {}x{}", img.width(), img.height());
+    // let img = image::load_from_memory(&img)?;
+    // println!("img shape {}x{}", img.width(), img.height());
 
     println!("time {:?}", start_time.elapsed());
     Ok(())

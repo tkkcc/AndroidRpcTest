@@ -113,27 +113,29 @@ class MainActivity : ComponentActivity() {
                         data class Msg(
                             val width: Int,
                             val height: Int,
-                            val data: UByteArray
+                            val data: String
                         )
                         Log.e("", "screenshot convert start: png + byte")
                         // base64 encode buf
-                        var stream = ByteArrayOutputStream(img.byteCount)
-                        img.compress(Bitmap.CompressFormat.PNG, 100, stream)
+//                        var stream = ByteArrayOutputStream(img.byteCount)
+//                        img.compress(Bitmap.CompressFormat.PNG, 100, stream)
 
                         Log.e("", "screenshot png encode finish")
 
 //                        val s = java.util.Base64.getEncoder().encodeToString(stream.toByteArray())
-//                        val s = kotlin.io.encoding.Base64.encode(stream.toByteArray())
+                        val s = kotlin.io.encoding.Base64.encode(buf.array())
 //                        val s = android.util.Base64.encodeToString(stream.toByteArray(), android.util.Base64.DEFAULT)
 
 
                         val d1 = Msg(
-                            data = stream.toByteArray().asUByteArray(),
+//                            data = stream.toByteArray().asUByteArray(),
+//                            data = buf.array().asUByteArray(),
+                            data = s,
                             width = 1920,
                             height = 1080
                         )
                         Log.e("", "screenshot start encode")
-                         stream = ByteArrayOutputStream()
+                        val stream = ByteArrayOutputStream()
 //
                         Json.encodeToStream(d1, stream)
                         val d = stream.toByteArray()
