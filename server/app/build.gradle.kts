@@ -1,3 +1,7 @@
+import java.util.Locale
+import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -24,7 +28,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("debug")
         }
@@ -48,6 +52,53 @@ android {
     }
 }
 
+androidComponents.onVariants { variant ->
+//    return@onVariants
+    val target =
+        if (variant.buildType == "release") {
+//        listOf("x86", "x86_64", "arm64-v8a", "armeabi-v7a")
+            listOf("x86_64")
+        } else {
+            listOf("x86_64")
+        }
+
+    val source = Path(projectDir.absolutePath, "src", "main", "rust")
+
+    val cmd =
+        mutableListOf("cargo", "ndk").apply {
+            add("-o")
+            add(Path(projectDir.absolutePath, "src", "main", "jniLibs").absolutePathString())
+            add("-p")
+            add(
+                android.defaultConfig.minSdkVersion!!
+                    .apiLevel
+                    .toString(),
+            )
+            target.forEach {
+                add("-t")
+                add(it)
+            }
+
+            add("build")
+            if (variant.buildType == "release") {
+                add("--release")
+            }
+        }
+
+    val variantName =
+        variant.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+    val cargoTask =
+        task<Exec>("cargo$variantName") {
+            workingDir(source)
+            commandLine(cmd)
+        }
+
+    project.afterEvaluate {
+        val mergeTask = project.tasks.getByName("merge${variantName}JniLibFolders")
+        mergeTask.dependsOn(cargoTask)
+    }
+}
+
 dependencies {
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.netty)
@@ -55,8 +106,6 @@ dependencies {
     implementation(libs.ktor.server.json)
 
     implementation(libs.kotlinx.serialization.json)
-
-
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -74,3 +123,4 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+

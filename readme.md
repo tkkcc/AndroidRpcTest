@@ -4,8 +4,8 @@ multi client request-response between rust and kotlin on android
 
 ## conclusion
 
-1. kotlin serialization encode bytearry is very time consuming
-2. 
+1. kotlin serialization json encode bytearry is very slow
+2. android bitmap png compression too slow
 
 
 ## exp
